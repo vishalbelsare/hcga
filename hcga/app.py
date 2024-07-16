@@ -18,6 +18,7 @@ directly from the command line:
 Alternatively these commands can be bundled together into a single bash file,
 see 'run_example.sh' in the examples folder.
 """
+
 import logging
 import os
 from pathlib import Path
@@ -25,7 +26,6 @@ from pathlib import Path
 import click
 
 L = logging.getLogger(__name__)
-L.setLevel(logging.DEBUG)
 # pylint: disable=too-many-arguments,too-many-locals
 
 

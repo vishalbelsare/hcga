@@ -5,6 +5,7 @@ Each feature class in the ./features folder can inherit the main feature class f
 The functions here are necessary to evaluate each individual feature found inside a feature class.
 
 """
+
 import logging
 import multiprocessing
 import sys
@@ -40,7 +41,7 @@ def _hmean(dist):
 
 def _mode(dist):
     """"""
-    return st.mode(dist)[0][0]
+    return st.mode(dist).mode
 
 
 def _get_index(args, i=0):
@@ -55,12 +56,16 @@ def _trivial(graph):  # pylint: disable=unused-argument
 
 def _feat_N(graph, features):
     """"""
-    return features / len(graph.nodes)
+    if features is not None:
+        return features / len(graph.nodes)
+    return None
 
 
 def _feat_E(graph, features):
     """"""
-    return features / len(graph.edges)
+    if features is not None:
+        return features / len(graph.edges)
+    return None
 
 
 class FeatureClass:
@@ -230,16 +235,13 @@ class FeatureClass:
 
         try:
             try:
-                feature = timeout_eval(
-                    feature_function, (function_args,), timeout=self.timeout, pool=self.pool
-                )
+                feature = timeout_eval(feature_function, (function_args,), timeout=self.timeout)
             except NetworkXNotImplemented:
                 if self.graph_type == "directed":
                     feature = timeout_eval(
                         feature_function,
                         (to_undirected(function_args),),
                         timeout=self.timeout,
-                        pool=self.pool,
                     )
                 else:
                     return None
@@ -412,13 +414,13 @@ class FeatureClass:
 
         self.add_feature(
             feat_name + "_coverage",
-            lambda: list(partial(quality.partition_quality, partition=community_partition))[0],
+            lambda graph: quality.partition_quality(graph, partition=community_partition)[0],
             "Coverage" + compl_desc,
             feat_interpret,
         )
         self.add_feature(
             feat_name + "_performance",
-            lambda: list(partial(quality.partition_quality, partition=community_partition))[1],
+            lambda graph: quality.partition_quality(graph, partition=community_partition)[1],
             "Performance" + compl_desc,
             feat_interpret,
         )

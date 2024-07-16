@@ -1,4 +1,5 @@
 """plotting functions."""
+
 import logging
 import os
 
@@ -184,7 +185,6 @@ def _plot_dendrogram_shap(
     top_feat_idx = shap_feature_importance.argsort()[-max_feats:]
     X_red = X[X.columns[top_feat_idx]]
     # to make sure to have the reduced features
-    #X_red = X_red.T.append(X[reduced_features].T).drop_duplicates().T
     X_red = pd.concat([X_red.T, X[reduced_features].T]).drop_duplicates().T
 
     plt.figure(figsize=(20, 1.2 * 20))
@@ -194,7 +194,7 @@ def _plot_dendrogram_shap(
     ax2 = plt.subplot(gs[1, 0])
 
     cor = np.abs(X_red.corr())
-    Z = linkage(cor.to_numpy(), "ward")
+    Z = linkage(np.nan_to_num(cor.to_numpy()), "ward")
     dn = dendrogram(Z, labels=X_red.columns, ax=ax1)
     ax1.xaxis.set_ticklabels([])
     ax1.set_ylabel("Euclidean Distance")
@@ -225,7 +225,6 @@ def _plot_feature_correlation(
     top_feat_idx = shap_feature_importance.argsort()[-max_feats:]
     X_red = X[X.columns[top_feat_idx]].sort_index(axis=0).sort_index(axis=1)
     # to make sure to have the reduced features
-    #X_red = X_red.T.append(X[reduced_features].T).drop_duplicates().T
     X_red = pd.concat([X_red.T, X[reduced_features].T]).drop_duplicates().T
 
     cor_sorted = np.abs(X_red.corr())

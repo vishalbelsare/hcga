@@ -1,4 +1,5 @@
 """Communities Asyn class."""
+
 from collections import Counter
 from functools import lru_cache, partial
 
@@ -21,7 +22,7 @@ def eval_asyn(graph, num_comms):
 
 def sum_density(graph, num_comms):
     """sum_density"""
-    return (sum(eval_asyn(graph, num_comms)[1]),)
+    return sum(eval_asyn(graph, num_comms)[1])
 
 
 def ratio_density(graph, num_comms):

@@ -9,6 +9,7 @@ When loading graphs into hcga, the Graph classes will attempt to convert the inp
 graph type into a generic hcga Graph object.
 
 """
+
 import logging
 
 import networkx as nx
@@ -281,7 +282,7 @@ def convert_graph(  # pylint: disable=too-many-branches
         label = [label]
 
     if isinstance(graph, nx.Graph):
-        A = nx.to_scipy_sparse_matrix(graph, weight="weight", format="coo")
+        A = nx.to_scipy_sparse_array(graph, weight="weight", format="coo")
 
         if not node_features:
             try:
